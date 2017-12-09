@@ -1,12 +1,13 @@
 package pl.agh.edu.iosr.microservices.crud.model;
 
-import java.util.Date;
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import java.util.Date;
+
+@Document
 public class Note {
     @Id
-    @GeneratedValue()
     private String id;
 
     private String author;
