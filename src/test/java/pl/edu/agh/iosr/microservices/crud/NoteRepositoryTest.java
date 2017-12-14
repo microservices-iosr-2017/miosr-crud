@@ -1,5 +1,13 @@
 package pl.edu.agh.iosr.microservices.crud;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import pl.edu.agh.iosr.microservices.crud.config.LocalDynamoDbRule;
 import pl.edu.agh.iosr.microservices.crud.model.Note;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +19,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class NoteRepositoryTest extends DynamoDbInMemoryTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = CrudApplication.class)
+@ActiveProfiles("test")
+public class NoteRepositoryTest {
 
     @Autowired
     NotesRepository notesRepository;
+
+    @ClassRule
+    public static final LocalDynamoDbRule dynamoDBProvider = new LocalDynamoDbRule();
 
     private static final String EXPECTED_AUTHOR = "Test Author";
     private static final String EXPECTED_TITLE = "Test Title";
@@ -22,6 +36,18 @@ public class NoteRepositoryTest extends DynamoDbInMemoryTest {
     private static final String EXPECTED_AUTHOR2 = "Test Author2";
     private static final String EXPECTED_TITLE2 = "Test Title2";
     private static final String EXPECTED_TEXT2 = "Test Text2";
+
+
+    @Before
+    public void before() {
+        dynamoDBProvider.createTable(Note.class);
+    }
+
+    @After
+    public void after() {
+        dynamoDBProvider.deleteTable(Note.class);
+    }
+
 
     @Test
     public void shouldInsertNoteToDatabase() {
