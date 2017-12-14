@@ -1,0 +1,12 @@
+
+language: java
+
+sudo: false
+
+script:
+  mvn clean validate test
+
+
+notifications:
+  slack:
+    iosr-workgroup:8wdjZUlR1MD3XQN16znNltRq#miosr_crud
