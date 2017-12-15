@@ -1,16 +1,10 @@
 version: '2'
 
 services:
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-
   crud:
-    build: .
+    image: kroczi/miosr-crud
     ports:
       - "8080:8080"
-    depends_on:
-      - mongodb
     environment:
-      MONGODB_HOST: mongodb
+      AWS_ACCESS: your_access
+      AWS_SECRET: your_secret
