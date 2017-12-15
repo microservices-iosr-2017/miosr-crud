@@ -4,7 +4,7 @@ services:
   crud:
     image: kroczi/miosr-crud
     ports:
-      - "8080:8080"
+      - "8090:8090"
     environment:
       AWS_ACCESS: your_access
       AWS_SECRET: your_secret
