@@ -35,6 +35,8 @@ public class CrudApplicationTest {
     private static final String EXPECTED_AUTHOR = "Test Author";
     private static final String EXPECTED_TITLE = "Test Title";
     private static final String EXPECTED_TEXT = "Test Text";
+    private static final String TEST_USER = "TestUser";
+    private static final String TEST_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0VXNlciJ9.1KD4gItK8r8i3w7IlqAifl85tgzAy3nGSG3btvdtVBA";
 
 
     @Before
@@ -51,6 +53,8 @@ public class CrudApplicationTest {
     @Test
     public void shouldCreateNote() throws Exception {
         mockMvc.perform(post("/notes")
+                .header("username", TEST_USER)
+                .header("token", TEST_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"author\": \"%s\", \"title\":\"%s\", \"text\":\"%s\"}", EXPECTED_AUTHOR, EXPECTED_TITLE, EXPECTED_TEXT)))
                 .andExpect(status().isCreated())
@@ -60,6 +64,8 @@ public class CrudApplicationTest {
     @Test
     public void shouldRetrieveNote() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/notes")
+                .header("username", TEST_USER)
+                .header("token", TEST_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"author\": \"%s\", \"title\":\"%s\", \"text\":\"%s\"}", EXPECTED_AUTHOR, EXPECTED_TITLE, EXPECTED_TEXT)))
                 .andExpect(status().isCreated()).andReturn();
@@ -76,6 +82,8 @@ public class CrudApplicationTest {
     @Test
     public void shouldDeleteNote() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/notes")
+                .header("username", TEST_USER)
+                .header("token", TEST_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"author\": \"%s\", \"title\":\"%s\"}", EXPECTED_AUTHOR, EXPECTED_TITLE)))
                 .andExpect(status().isCreated()).andReturn();
