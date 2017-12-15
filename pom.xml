@@ -59,6 +59,12 @@
 			<version>${aws-java-sdk-dynamodb.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
@@ -74,7 +80,6 @@
             <version>${DynamoDBLocal.version}</version>
             <scope>test</scope>
 		</dependency>
-
 
 		<dependency>
 			<groupId>com.almworks.sqlite4java</groupId>
