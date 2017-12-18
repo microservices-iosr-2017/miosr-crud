@@ -3,23 +3,9 @@ language: java
 
 sudo: false
 
-
-services:
-  - docker
-
-
 notifications:
   slack:
     iosr-workgroup:8wdjZUlR1MD3XQN16znNltRq#miosr_crud
 
-
 script:
-  mvn clean validate package
-
-
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-      docker build -t kroczi/miosr-crud -f Dockerfile . ;
-      docker login -u "$DOCKER_USERNAME_MK" -p "$DOCKER_PASSWORD_MK";
-      docker push kroczi/miosr-crud;
-    fi
+  mvn clean package
