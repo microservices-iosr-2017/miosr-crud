@@ -1,7 +1,6 @@
 package pl.edu.agh.iosr.microservices.crud;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +12,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import pl.edu.agh.iosr.microservices.crud.config.LocalDynamoDbRule;
-import pl.edu.agh.iosr.microservices.crud.model.Note;
+import pl.edu.agh.iosr.microservices.crud.config.LocalDatastoreRule;
+
+import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CrudApplicationTest {
 
     @ClassRule
-    public static final LocalDynamoDbRule dynamoDBProvider = new LocalDynamoDbRule();
+    public static final LocalDatastoreRule LOCAL_DATASTORE_RULE = new LocalDatastoreRule();
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,16 +39,10 @@ public class CrudApplicationTest {
     private static final String TEST_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0VXNlciJ9.1KD4gItK8r8i3w7IlqAifl85tgzAy3nGSG3btvdtVBA";
 
 
-    @Before
-    public void before() {
-        dynamoDBProvider.createTable(Note.class);
-    }
-
     @After
-    public void after() {
-        dynamoDBProvider.deleteTable(Note.class);
+    public void after() throws IOException {
+        LocalDatastoreRule.localDatastoreHelper.reset();
     }
-
 
     @Test
     public void shouldCreateNote() throws Exception {
@@ -85,7 +79,7 @@ public class CrudApplicationTest {
                 .header("username", TEST_USER)
                 .header("token", TEST_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("{\"author\": \"%s\", \"title\":\"%s\"}", EXPECTED_AUTHOR, EXPECTED_TITLE)))
+                .content(String.format("{\"author\": \"%s\", \"title\":\"%s\", \"text\":\"%s\"}", EXPECTED_AUTHOR, EXPECTED_TITLE, EXPECTED_TEXT)))
                 .andExpect(status().isCreated()).andReturn();
 
         String location = mvcResult.getResponse().getHeader("Location");

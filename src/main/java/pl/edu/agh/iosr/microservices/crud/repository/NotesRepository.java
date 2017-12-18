@@ -1,38 +1,56 @@
 package pl.edu.agh.iosr.microservices.crud.repository;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import pl.edu.agh.iosr.microservices.crud.model.Note;
+import pl.edu.agh.iosr.microservices.crud.model.NoteEntityMapper;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-
-@Component
+@Repository
 public class NotesRepository {
 
-    private DynamoDBMapper mapper;
+    @Value("${google.cloud.datastore.kind}")
+    private String datastoreKind;
 
     @Autowired
-    public NotesRepository(DynamoDBMapper mapper) {
-        this.mapper = mapper;
+    private Datastore datastore;
+
+    @Autowired
+    private KeyFactory keyFactory;
+
+    @Autowired
+    private NoteEntityMapper mapper;
+
+    public Note save(Note note) {
+        return mapper.convert(datastore.put(mapper.convert(note)));
     }
 
-    public void save(Note item) {
-        mapper.save(item);
-    }
-
-    public Note findByNoteId(String noteId) {
-        return mapper.load(Note.class, noteId);
+    public Note findByNoteId(Long noteId) {
+        return mapper.convert(datastore.get(keyFactory.newKey(noteId)));
     }
 
     public List<Note> findAll() {
-        return mapper.scan(Note.class, new DynamoDBScanExpression());
+        Query<Entity> query = Query.newEntityQueryBuilder().setKind(datastoreKind).build();
+        Iterator<Entity> results = datastore.run(query);
+        List<Note> notes = new LinkedList<>();
+
+        while (results.hasNext()) {
+            notes.add(mapper.convert(results.next()));
+        }
+
+        return notes;
     }
 
-    public void delete(Note item) {
-        mapper.delete(item);
+    public void delete(Long noteId) {
+        datastore.delete(keyFactory.newKey(noteId));
     }
 
 }

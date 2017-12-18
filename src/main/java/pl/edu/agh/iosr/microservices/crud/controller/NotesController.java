@@ -11,12 +11,9 @@ import pl.edu.agh.iosr.microservices.crud.validator.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController()
 @RequestMapping("/notes")
@@ -45,14 +42,14 @@ public class NotesController {
         if (!validator.validateHttpRequest(request))
             throw new UserAuthorizationException();
 
-        notesService.saveNote(note);
+        note = notesService.saveNote(note);
         response.setHeader("Location", request.getRequestURL().append("/").append(note.getId()).toString());
     }
 
     @RequestMapping(method = GET, value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Note getNoteById(@PathVariable(name = "id") String id) throws NoteNotFoundException {
+    public Note getNoteById(@PathVariable(name = "id") Long id) throws NoteNotFoundException {
         Note note = notesService.getNote(id);
 
         if (note == null)
@@ -63,7 +60,7 @@ public class NotesController {
 
     @RequestMapping(method = DELETE, value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNoteById(@PathVariable(name = "id") String id) {
+    public void deleteNoteById(@PathVariable(name = "id") Long id) {
         notesService.removeNote(id);
     }
 }

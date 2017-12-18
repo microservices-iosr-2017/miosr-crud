@@ -11,18 +11,18 @@ import java.util.List;
 @Service
 public class NotesService {
 
-    public final NotesRepository notesRepository;
+    private final NotesRepository notesRepository;
 
     @Autowired
     public NotesService(NotesRepository notesRepository) {
         this.notesRepository = notesRepository;
     }
 
-    public void saveNote(Note note) {
-        notesRepository.save(note);
+    public Note saveNote(Note note) {
+        return notesRepository.save(note);
     }
 
-    public Note getNote(String noteId) {
+    public Note getNote(Long noteId) {
         return notesRepository.findByNoteId(noteId);
     }
 
@@ -30,9 +30,7 @@ public class NotesService {
         return notesRepository.findAll();
     }
 
-    public Note removeNote(String noteId) {
-        Note note = notesRepository.findByNoteId(noteId);
-        notesRepository.delete(note);
-        return note;
+    public void removeNote(Long noteId) {
+        notesRepository.delete(noteId);
     }
 }
