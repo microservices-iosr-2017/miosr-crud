@@ -1,11 +1,25 @@
-
 language: java
 
 sudo: false
+
+service:
+  - docker
 
 notifications:
   slack:
     iosr-workgroup:8wdjZUlR1MD3XQN16znNltRq#miosr_crud
 
 script:
-  mvn clean package
+  - if [ -n "$TRAVIS_TAG" ]
+    then
+      mvn clean package -Dmaven.test.skip=true;
+    else
+      mvn clean test;
+    fi
+
+after_success:
+  - if [ -n "$TRAVIS_TAG" ]; then
+      docker build -t "kroczi/miosr-crud:$TRAVIS_TAG" -f Dockerfile . ;
+	  docker login -u "$DOCKER_USERNAME_MK" -p "$DOCKER_PASSWORD_MK";
+      docker push kroczi/miosr-crud;
+    fi
