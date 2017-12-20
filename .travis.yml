@@ -20,6 +20,6 @@ script:
 after_success:
   - if [ -n "$TRAVIS_TAG" ]; then
       docker build -t "kroczi/miosr-crud:$TRAVIS_TAG" -f Dockerfile . ;
-	  docker login -u "$DOCKER_USERNAME_MK" -p "$DOCKER_PASSWORD_MK";
+      docker login -u "$DOCKER_USERNAME_MK" -p "$DOCKER_PASSWORD_MK";
       docker push kroczi/miosr-crud;
     fi
