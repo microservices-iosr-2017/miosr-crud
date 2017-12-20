@@ -10,13 +10,11 @@ notifications:
     iosr-workgroup:8wdjZUlR1MD3XQN16znNltRq#miosr_crud
 
 script:
-  - if [ -n "$TRAVIS_TAG" ]
-    then
+  - if [ -n "$TRAVIS_TAG" ]; then
       mvn clean package -Dmaven.test.skip=true;
-      exit 0;
+    else
+      mvn clean test;
     fi
-
-    mvn clean test;
 
 after_success:
   - if [ -n "$TRAVIS_TAG" ]; then
