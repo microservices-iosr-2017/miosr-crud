@@ -13,9 +13,10 @@ script:
   - if [ -n "$TRAVIS_TAG" ]
     then
       mvn clean package -Dmaven.test.skip=true;
-    else
-      mvn clean test;
+      exit 0;
     fi
+
+    mvn clean test;
 
 after_success:
   - if [ -n "$TRAVIS_TAG" ]; then
