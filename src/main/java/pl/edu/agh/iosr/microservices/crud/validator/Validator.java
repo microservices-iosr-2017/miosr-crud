@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class Validator {
 
+    @Value("${should.perform.validation}")
+    private boolean shouldValidate;
+
     @Value("${validator.secret.key}")
     private String validatorSecret;
 
@@ -28,6 +31,9 @@ public class Validator {
     }
 
     public boolean validateHttpRequest(HttpServletRequest request) {
+        if (!shouldValidate)
+            return true;
+
         String user = request.getHeader("username");
         String token = request.getHeader("token");
 
