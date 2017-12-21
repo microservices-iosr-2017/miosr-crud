@@ -1,4 +1,4 @@
-package pl.edu.agh.iosr.microservices.crud;
+package pl.edu.agh.iosr.microservices.crud.repository;
 
 import org.junit.After;
 import org.junit.ClassRule;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.edu.agh.iosr.microservices.crud.CrudApplication;
 import pl.edu.agh.iosr.microservices.crud.config.LocalDatastoreRule;
 import pl.edu.agh.iosr.microservices.crud.model.Note;
 import pl.edu.agh.iosr.microservices.crud.repository.NotesRepository;
